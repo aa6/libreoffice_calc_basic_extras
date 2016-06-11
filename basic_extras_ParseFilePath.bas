@@ -1,4 +1,66 @@
-' Structure that used to store data about a parsed path.                                           '
+'--------------------------------------------------------------------------------------------------'
+' ParseFilePath                                                                                    '
+'--------------------------------------------------------------------------------------------------'
+' Returns object filled with parsed path parts.                                                    '
+'                                                                                                  '
+' Parameters:                                                                                      '
+'                                                                                                  '
+'   ByVal FullPath As String                                                                       '
+'     Path to parse. ByVal keyword prevents it from modification because by default arguments are  '
+'     passed by reference.                                                                         '
+'                                                                                                  '
+' Examples:                                                                                        '
+'--------------------------------------------------------------------------------------------------'
+'                                                                                                  '
+'     parsed_path = ParseFilePath(path)                                                            '
+'     MsgBox(parsed_path.FileNameNoExtension)                                                      '
+'                                                                                                  '
+' Expected values:                                                                                 '
+'                                                                                                  '
+'   path: "/home/user/.htaccess"                                                                   '
+'   parsed_path:                                                                                   '
+'     FilePathParsedByParseFilePathFunction                                                        '
+'       .FileDir              string "/home/user/"                                                 '
+'       .FileName             string ".htaccess"                                                   '
+'       .FileDirName          string "user"                                                        '
+'       .FileFullPath         string "/home/user/.htaccess"                                        '
+'       .FileExtension        string ""                                                            '
+'       .FileDirNoSlash       string "/home/user"                                                  '
+'       .FileNameNoExtension  string ".htaccess"                                                   '
+'                                                                                                  '
+'   path: "/home/user/document.ods"                                                                '
+'   parsed_path:                                                                                   '
+'     FilePathParsedByParseFilePathFunction                                                        '
+'       .FileDir              string "/home/user/"                                                 '
+'       .FileName             string "document.ods"                                                '
+'       .FileDirName          string "user"                                                        '
+'       .FileFullPath         string "/home/user/document.ods"                                     '
+'       .FileExtension        string "ods"                                                         '
+'       .FileDirNoSlash       string "/home/user"                                                  '
+'       .FileNameNoExtension  string "document"                                                    '
+'                                                                                                  '
+'   path: "user/document.ods"                                                                      '
+'   parsed_path:                                                                                   '
+'     FilePathParsedByParseFilePathFunction                                                        '
+'       .FileDir              string "user/"                                                       '
+'       .FileName             string "document.ods"                                                '
+'       .FileDirName          string "user"                                                        '
+'       .FileFullPath         string "user/document.ods"                                           '
+'       .FileExtension        string "ods"                                                         '
+'       .FileDirNoSlash       string "user"                                                        '
+'       .FileNameNoExtension  string "document"                                                    '
+'                                                                                                  '
+'   path: "C:\User\Admin\Рабочий стол\document.name.ods"                                           '
+'   parsed_path:                                                                                   '
+'     FilePathParsedByParseFilePathFunction                                                        '
+'       .FileDir              string "C:\User\Admin\Рабочий стол\"                                 '
+'       .FileName             string "document.name.ods"                                           '
+'       .FileDirName          string "Рабочий стол"                                                '
+'       .FileFullPath         string "C:\User\Admin\Рабочий стол\document.name.ods"                '
+'       .FileExtension        string "ods"                                                         '
+'       .FileDirNoSlash       string "C:\User\Admin\Рабочий стол"                                  '
+'       .FileNameNoExtension  string "document.name"                                               '
+'--------------------------------------------------------------------------------------------------'
 Type FilePathParsedByParseFilePathFunction
   
     FileDir As String
@@ -10,10 +72,7 @@ Type FilePathParsedByParseFilePathFunction
     FileNameNoExtension As String
   
 End Type
-
-' Returns FilePathParsedByParseFilePathFunction object filled with parsed values.                  '
-' ByVal keyword prevents FullPath from modification because by default arguments are passed by     '
-' reference.                                                                                       '
+                                                                                  '
 Function ParseFilePath(ByVal FullPath As String) As FilePathParsedByParseFilePathFunction
     
     Dim pos As Long
@@ -57,9 +116,9 @@ Function ParseFilePath(ByVal FullPath As String) As FilePathParsedByParseFilePat
         End If
     Next pos
     ParseFilePath.FileExtension = Right(ParseFilePath.FileName, basenamelen - basenamelastdotindex)
-    basenameextdiff = basenamelen - Len(ParseFilePath.FileExtension) - 1
-    If basenameextdiff < 0 Then
-        basenameextdiff = 0
+    basenameextdiff = basenamelen - Len(ParseFilePath.FileExtension)
+    If Len(ParseFilePath.FileExtension) > 0 Then
+        basenameextdiff = basenameextdiff - 1 ' Dot separator. '
     End If
     ParseFilePath.FileNameNoExtension = Left(ParseFilePath.FileName, basenameextdiff)
     ' Getting directory name with slash and without. '
