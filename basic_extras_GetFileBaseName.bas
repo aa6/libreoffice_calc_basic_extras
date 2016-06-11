@@ -15,8 +15,10 @@
 '     basename = GetFileBaseName(path)                                                             '
 '                                                                                                  '
 ' Expected values:                                                                                 '
+'   path: "/home/user/doc.name.ods"               basename: "doc.name.ods"                         '
 '   path: "/home/user/document.ods"               basename: "document.ods"                         '
 '   path: "/home/user/.htaccess"                  basename: ".htaccess"                            '
+'   path: "user/document.ods"                     basename: "document.ods"                         '
 '   path: "C:\User\Admin\Рабочий стол\.htaccess"  basename: ".htaccess"                            '
 '--------------------------------------------------------------------------------------------------'
 Function GetFileBaseName(ByVal FullPath As String) As String
