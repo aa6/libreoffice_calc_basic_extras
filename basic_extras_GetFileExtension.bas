@@ -19,7 +19,7 @@
 '   path: "/home/user/.htaccess"                          extension: ""                            '
 '   path: "/home/user/document.ods"                       extension: "ods"                         '
 '   path: "user/document.ods"                             extension: "ods"                         '
-'   path: "C:\User\Admin\Рабочий стол\document.name.ods"  extension: "ods"                         '
+'   path: "C:\Users\Admin\Рабочий стол\document.name.ods" extension: "ods"                         '
 '--------------------------------------------------------------------------------------------------'
 Function GetFileExtension(ByVal FullPath As String) As String
 

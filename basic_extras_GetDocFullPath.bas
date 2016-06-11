@@ -36,7 +36,7 @@
 ' Expected values:                                                                                 '
 '   docpath: "/home/user/docref_document.ods"                                                      '
 '                                                                                                  '
-' Will NOT raise an error if document is not saved.                                                '
+' Will NOT raise an error and will return "" if document is not saved.                             '
 '--------------------------------------------------------------------------------------------------'
 ' GetDocFullPath has variable amount of parameters. You can omit Document parameter and pass the   '
 ' IgnoreNoPathError as a first parameter.                                                          '
@@ -46,7 +46,7 @@
 ' Expected values:                                                                                 '
 '   docpath: "/home/user/current_opened_document.ods"                                              '
 '                                                                                                  '
-' Will NOT raise an error if document is not saved.                                                '
+' Will NOT raise an error and will return "" if document is not saved.                             '
 '--------------------------------------------------------------------------------------------------'
 Function GetDocFullPath(Optional Document as Variant, Optional IgnoreNoPathError as Boolean) As String
 

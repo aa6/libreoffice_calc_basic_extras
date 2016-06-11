@@ -19,7 +19,7 @@
 '   path: "/home/user/document.ods"               basename: "document.ods"                         '
 '   path: "/home/user/.htaccess"                  basename: ".htaccess"                            '
 '   path: "user/document.ods"                     basename: "document.ods"                         '
-'   path: "C:\User\Admin\Рабочий стол\.htaccess"  basename: ".htaccess"                            '
+'   path: "C:\Users\Admin\Рабочий стол\.htaccess" basename: ".htaccess"                            '
 '--------------------------------------------------------------------------------------------------'
 Function GetFileBaseName(ByVal FullPath As String) As String
 
