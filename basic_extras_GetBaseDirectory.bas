@@ -36,6 +36,9 @@
 '   path: "C:\Users\Admin\"               basedir: "C:\Users\Admin"                                '
 '   path: "C:\Users\Admin"                basedir: "C:\Users"                                      '
 '--------------------------------------------------------------------------------------------------'
+' Feedback & Issues:                                                                               '
+'   https://github.com/aa6/libreoffice_calc_basic_extras/issues                                    '
+'--------------------------------------------------------------------------------------------------'
 Function GetBaseDirectory(ByVal FullPath As String, Optional DropTrailingSlash As Boolean) As String
 
     Dim i As Long

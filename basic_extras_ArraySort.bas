@@ -1,7 +1,7 @@
 '--------------------------------------------------------------------------------------------------'
-' ArrayUnique                                                                                      '
+' ArraySort                                                                                        '
 '--------------------------------------------------------------------------------------------------'
-' Returns an array containing elements of input array without duplicate values.                    '
+' Returns ascending sorted copy of the input array.                                                '
 '                                                                                                  '
 ' Parameters:                                                                                      '
 '                                                                                                  '
@@ -11,24 +11,24 @@
 ' Examples:                                                                                        '
 '--------------------------------------------------------------------------------------------------'
 '                                                                                                  '
-'     result_array = ArrayUnique(input_array)                                                      '
+'     sorted_array = ArraySort(input_array)                                                        '
 '                                                                                                  '
 ' Expected values:                                                                                 '
 '                                                                                                  '
 '   input_array:                                                                                   '
-'     Array(10,"vodka","10","beer","water",12,"beer","applejuice",12)                              '
-'   result_array:                                                                                  '
-'     Array(10,"vodka","10","beer","water",12,"applejuice")                                        '
+'     Array("12",12,10,"10","",2,20,"beer",1,"water","soda","beer","applejuice",12)                '
+'   sorted_array:                                                                                  '
+'     Array("",1,10,"10","12",12,12,2,20,"applejuice","beer","beer","soda","water")                '
 '--------------------------------------------------------------------------------------------------'
 '                                                                                                  '
-'     Sub TestArrayUnique                                                                          '
+'     Sub TestArraySort                                                                            '
 '         Dim item As Variant                                                                      '
 '         Dim result As String                                                                     '
 '         Dim inputarr As Variant                                                                  '
 '         Dim resultarr As Variant                                                                 '
 '         result = ""                                                                              '
-'         inputarr = Array(10,"vodka","10","beer","water",12,"beer","applejuice",12)               '
-'         resultarr = ArrayUnique(inputarr)                                                        '
+'         inputarr = Array("12",12,10,"10","",2,20,"beer",1,"water","soda","beer","applejuice",12) '
+'         resultarr = ArraySort(inputarr)                                                          '
 '         For Each item In resultarr                                                               '
 '             result = result + IIf(TypeName(item) = "String", """" + item + """", item) + ","     '
 '         Next item                                                                                '
@@ -39,22 +39,25 @@
 ' Feedback & Issues:                                                                               '
 '   https://github.com/aa6/libreoffice_calc_basic_extras/issues                                    '
 '--------------------------------------------------------------------------------------------------'
-Function ArrayUnique(Arr As Variant)
+Function ArraySort(Arr As Variant)
 
-    Dim item As Variant
-    Dim entry As Variant
-    Dim result() As Variant
+    Dim i As Long
+    Dim j As Long
+    Dim swap As Variant
+    Dim result(UBound(Arr)) As Variant
 
-    For Each item In Arr
-        For Each entry In result
-            If item = entry Then
-                Goto ArrayUniqueNextArrItem
+    For i = 0 To Ubound(Arr)
+        result(i) = Arr(i)
+    Next i
+    For i = 0 To Ubound(result)
+        For j = 0 To Ubound(result)
+            If CStr(result(i)) < CStr(result(j)) Then
+                swap = result(i)
+                result(i) = result(j)
+                result(j) = swap
             End If
-        Next entry
-        Redim Preserve result(UBound(result) + 1) As Variant
-        result(UBound(result)) = item
-        ArrayUniqueNextArrItem:
-    Next item
-    ArrayUnique = result
+        Next j
+    Next i
+    ArraySort = result
 
 End Function

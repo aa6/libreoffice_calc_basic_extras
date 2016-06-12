@@ -48,6 +48,9 @@
 '                                                                                                  '
 ' Will NOT raise an error and will return "" if document is not saved.                             '
 '--------------------------------------------------------------------------------------------------'
+' Feedback & Issues:                                                                               '
+'   https://github.com/aa6/libreoffice_calc_basic_extras/issues                                    '
+'--------------------------------------------------------------------------------------------------'
 Function GetDocFullPath(Optional Document as Variant, Optional IgnoreNoPathError as Boolean) As String
 
   If IsMissing(Document) Then

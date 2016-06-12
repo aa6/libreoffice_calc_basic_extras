@@ -30,6 +30,9 @@
 '   http://api.libreoffice.org/docs/idl/ref/structcom_1_1sun_1_1star_1_1table_1_1CellRangeAddress.html   '
 '   http://api.libreoffice.org/docs/idl/ref/interfacecom_1_1sun_1_1star_1_1sheet_1_1XUsedAreaCursor.html '
 '--------------------------------------------------------------------------------------------------'
+' Feedback & Issues:                                                                               '
+'   https://github.com/aa6/libreoffice_calc_basic_extras/issues                                    '
+'--------------------------------------------------------------------------------------------------'
 Function GetSheetUsedArea(Optional Sheet As Object) As Object
     
     Dim cursor As Object

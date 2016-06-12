@@ -21,6 +21,9 @@
 '   path: "user/document.ods"                             extension: "ods"                         '
 '   path: "C:\Users\Admin\Рабочий стол\document.name.ods" extension: "ods"                         '
 '--------------------------------------------------------------------------------------------------'
+' Feedback & Issues:                                                                               '
+'   https://github.com/aa6/libreoffice_calc_basic_extras/issues                                    '
+'--------------------------------------------------------------------------------------------------'
 Function GetFileExtension(ByVal FullPath As String) As String
 
     Dim pos As Long

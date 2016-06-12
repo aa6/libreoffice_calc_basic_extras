@@ -38,6 +38,9 @@
 ' Expected values:                                                                                 '
 '   str: "Price. -45"                       numbers: "45"                                          '
 '--------------------------------------------------------------------------------------------------'
+' Feedback & Issues:                                                                               '
+'   https://github.com/aa6/libreoffice_calc_basic_extras/issues                                    '
+'--------------------------------------------------------------------------------------------------'
 Function ParseFirstFloat(Str As String, Optional CheckNegatives As Boolean) As String
 
     Dim pos As Long

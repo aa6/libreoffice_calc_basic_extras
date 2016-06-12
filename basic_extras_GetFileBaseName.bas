@@ -21,6 +21,9 @@
 '   path: "user/document.ods"                     basename: "document.ods"                         '
 '   path: "C:\Users\Admin\Рабочий стол\.htaccess" basename: ".htaccess"                            '
 '--------------------------------------------------------------------------------------------------'
+' Feedback & Issues:                                                                               '
+'   https://github.com/aa6/libreoffice_calc_basic_extras/issues                                    '
+'--------------------------------------------------------------------------------------------------'
 Function GetFileBaseName(ByVal FullPath As String) As String
 
     Dim pos As Long

@@ -61,6 +61,9 @@
 '       .FileDirNoSlash       string "C:\Users\Admin\Рабочий стол"                                 '
 '       .FileNameNoExtension  string "document.name"                                               '
 '--------------------------------------------------------------------------------------------------'
+' Feedback & Issues:                                                                               '
+'   https://github.com/aa6/libreoffice_calc_basic_extras/issues                                    '
+'--------------------------------------------------------------------------------------------------'
 Type FilePathParsedByParseFilePathFunction
   
     FileDir As String

@@ -23,6 +23,9 @@
 '   Manual to the ThisComponent.storeAsURL last seen at:                                           '
 '     https://wiki.openoffice.org/wiki/Documentation/BASIC_Guide/StarDesktop                       '
 '--------------------------------------------------------------------------------------------------'
+' Feedback & Issues:                                                                               '
+'   https://github.com/aa6/libreoffice_calc_basic_extras/issues                                    '
+'--------------------------------------------------------------------------------------------------'
 Function SaveDocAsODS(ByVal FilePath As String)
     
     Dim SaveParams(1) As New com.sun.star.beans.PropertyValue

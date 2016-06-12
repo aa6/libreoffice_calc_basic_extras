@@ -31,6 +31,9 @@
 '   str: "a1b-c2d3ef" numbers: "123"                                                               '
 '   str: "-a1bc2d3ef" numbers: "123"                                                               '
 '--------------------------------------------------------------------------------------------------'
+' Feedback & Issues:                                                                               '
+'   https://github.com/aa6/libreoffice_calc_basic_extras/issues                                    '
+'--------------------------------------------------------------------------------------------------'
 Function ParseAllNumbers(Str As String, Optional CheckNegatives As Boolean) As String
    
     Dim pos As Long
