@@ -9,7 +9,7 @@
 '     Reference to a range or cell (com.sun.star.table.XCellRange / com.sun.star.table.XCell) or a '
 '     string name ("B5","R1C1", etc).                                                              '
 '                                                                                                  '
-'   Optional FailIfNotMerged As Boolean                                                            '
+'   Optional FailIfNotMerged As Boolean <Default = FALSE>                                          '
 '     If set to TRUE, the function will return -1 if given Cell is not merged.                     '
 '                                                                                                  '
 ' Examples:                                                                                        '
