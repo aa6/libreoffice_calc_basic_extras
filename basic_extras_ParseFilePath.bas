@@ -75,7 +75,6 @@ Type FilePathParsedByParseFilePathFunction
     FileNameNoExtension As String
   
 End Type
-                                                                                  '
 Function ParseFilePath(ByVal FullPath As String) As FilePathParsedByParseFilePathFunction
     
     Dim pos As Long
