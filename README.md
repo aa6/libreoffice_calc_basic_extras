@@ -1,4 +1,4 @@
-# libreoffice_calc_basic_extras
+# LibreOffice Calc Basic Extras
 Extra functions for LibreOffice Calc macros.
 
 ## Usage
