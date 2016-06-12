@@ -1,7 +1,7 @@
 '--------------------------------------------------------------------------------------------------'
 ' UnMergeAndNormalizeCell                                                                          '
 '--------------------------------------------------------------------------------------------------'
-' Unmerges merged cell and fill the unmerged cell with merged cell value or formula.               '
+' Unmerges merged cell and fill the unmerged cells with merged cell value or formula.              '
 '                                                                                                  '
 ' Parameters:                                                                                      '
 '                                                                                                  '
