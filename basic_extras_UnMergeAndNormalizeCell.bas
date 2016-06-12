@@ -1,7 +1,7 @@
 '--------------------------------------------------------------------------------------------------'
 ' UnMergeAndNormalizeCell                                                                          '
 '--------------------------------------------------------------------------------------------------'
-' Returns a merged cell row span count.                                                            '
+' Unmerges merged cell and fill the unmerged cell with merged cell value or formula.               '
 '                                                                                                  '
 ' Parameters:                                                                                      '
 '                                                                                                  '
