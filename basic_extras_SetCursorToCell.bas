@@ -23,11 +23,6 @@
 ' Feedback & Issues:                                                                               '
 '   https://github.com/aa6/libreoffice_calc_basic_extras/issues                                    '
 '--------------------------------------------------------------------------------------------------'
-Function SetCursorToCell_GetCellAbsoluteName(CellRef As Object)
-    ' Without this function you will get "BASIC runtime error. Object variable not set." each time '
-    ' you call SetCursorToCell with a string parameter.                                            '
-    SetCursorToCell_GetCellAbsoluteName = CellRef.AbsoluteName
-End Function
 Sub SetCursorToCell(Cell As Variant)
 
     Dim args(0) As New com.sun.star.beans.PropertyValue
@@ -37,7 +32,7 @@ Sub SetCursorToCell(Cell As Variant)
     If TypeName(Cell) = "String" Then
         args(0).Value = Cell
     Else 
-        args(0).Value = SetCursorToCell_GetCellAbsoluteName(Cell)
+        args(0).Value = IIf(TRUE,Cell,Cell).AbsoluteName ' `Object variable not set.` workaround '
     End If
 
     dispatcher = createUnoService("com.sun.star.frame.DispatchHelper")
