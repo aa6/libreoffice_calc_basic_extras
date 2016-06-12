@@ -17,7 +17,7 @@
 '     SetCursorToCell("B5")                                                                        '
 '     SetCursorToCell("R1C1")                                                                      '
 '     SetCursorToCell("$'Sheet.name.with.dots'.$G$9")                                              '
-'     ThisComponent.Sheets.getByIndex(0).getCellByPosition(6,4)                                    '
+'     SetCursorToCell(ThisComponent.Sheets.getByIndex(0).getCellByPosition(6,4))                   '
 '                                                                                                  '
 '--------------------------------------------------------------------------------------------------'
 ' Feedback & Issues:                                                                               '
