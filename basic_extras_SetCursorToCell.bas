@@ -32,7 +32,7 @@ Sub SetCursorToCell(Cell As Variant)
     If TypeName(Cell) = "String" Then
         args(0).Value = Cell
     Else 
-        args(0).Value = IIf(TRUE,Cell,Cell).AbsoluteName ' `Object variable not set.` workaround '
+        args(0).Value = IIf(TRUE,Cell,Cell).AbsoluteName ' `Object variable not set.` workaround. '
     End If
 
     dispatcher = createUnoService("com.sun.star.frame.DispatchHelper")

@@ -48,7 +48,7 @@ Function MergedCellGetRowSpanCount(Cell As Variant, Optional FailIfNotMerged As 
     If TypeName(Cell) = "String" Then
         args1(0).Value = Cell
     Else 
-        args1(0).Value = IIf(TRUE,Cell,Cell).AbsoluteName
+        args1(0).Value = IIf(TRUE,Cell,Cell).AbsoluteName ' `Object variable not set.` workaround. '
     End If
     dispatcher.executeDispatch(ThisComponent.CurrentController.Frame, ".uno:GoToCell", "", 0, args1())
     target_cell = ThisComponent.getCurrentSelection()
