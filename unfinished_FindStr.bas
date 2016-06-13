@@ -5,6 +5,7 @@ Type SearchContextOptionsOfFindStrFunction
 
   CaseSensitive As Boolean
   TrimmedSearch As Boolean
+  PreparedSearch As Boolean
   SubstringSearch As Boolean
   
 End Type
@@ -62,6 +63,7 @@ Function FindStr(SearchSubject as Variant, Optional SearchAreas As Variant, Opti
       ' Preparing SearchOptions. '
       search_context.ContextOptions.CaseSensitive = FALSE
       search_context.ContextOptions.TrimmedSearch = FALSE
+      search_context.ContextOptions.PreparedSearch = FALSE
     search_context.ContextOptions.SubstringSearch = FALSE
       If NOT IsMissing(SearchOptions) Then
         If InStr(TypeName(SearchOptions),"(") > 0 Then
@@ -79,6 +81,8 @@ Function FindStr(SearchSubject as Variant, Optional SearchAreas As Variant, Opti
             search_context.ContextOptions.SubstringSearch = FALSE
           Case "trim", "trimmed"
             search_context.ContextOptions.TrimmedSearch = TRUE
+          Case "prepare", "prepared"
+            search_context.ContextOptions.PreparedSearch = TRUE
           Case "notrim", "notrimmed", "nontrim", "nontrimmed"
             search_context.ContextOptions.TrimmedSearch = FALSE
           Case "substr", "substring", "substring-search"
@@ -89,7 +93,11 @@ Function FindStr(SearchSubject as Variant, Optional SearchAreas As Variant, Opti
             search_context.ContextOptions.CaseSensitive = TRUE
           Case "case-insensitive", "caseinsensitive", "notcasesensitive"
             search_context.ContextOptions.CaseSensitive = FALSE
+          Case Else
+            Err.Raise("UNSUPPORTED FINDSTR OPTION: " & LCase(Trim(item)))
         End Select
+      Else
+        Err.Raise("FINDSTR OPTION MUST BE A STRING")
       End If
     Next item
     ' Preparing search_words. '
@@ -138,12 +146,14 @@ Function FindStr(SearchSubject as Variant, Optional SearchAreas As Variant, Opti
             normalized_search_areas(UBound(normalized_search_areas)) = Array(sheet,item.getRangeAddress())            
           Next item
         Case Else
-          Err.Raise("UNSUPPORTED TYPE OF SEARCH RANGE")
+          Err.Raise("UNSUPPORTED TYPE OF FINDSTR SEARCH RANGE") ' Sorry. '
       End Select
       Next search_area
       search_context.ContextAreas = normalized_search_areas
-    FindStr = search_context
-    Exit Function
+    If search_context.ContextOptions.PreparedSearch = TRUE Then
+      FindStr = search_context
+      Exit Function
+    End If
     Else
       ' Implying that each object passed as SearchSubject would be a search context. '
       search_context = SearchSubject
