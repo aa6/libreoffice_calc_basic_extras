@@ -22,6 +22,7 @@ Type SearchContextOfFindStrFunction
     IsNotEmpty As Boolean
     SheetName As String
     SheetIndex As Long
+    ' For internal usage: '
     ContextRow As Long
     ContextCol As Long
     ContextArea As Long
@@ -209,5 +210,5 @@ Function FindStr(SearchSubject as Variant, Optional SearchAreas As Variant, Opti
     Erase search_context.SheetName
     Erase search_context.SheetIndex
     search_context.ContextArea = search_area_index
-    
+
 End Function
