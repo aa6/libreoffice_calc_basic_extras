@@ -177,23 +177,23 @@ Function FindStr(SearchSubject as Variant, Optional SearchAreas As Variant, Opti
                     Else
                         search_result = IIf(cellvalue = word, TRUE, FALSE)
                     End If
-                If search_result = TRUE Then
-                    search_context.Empty = FALSE
-                    search_context.NotEmpty = TRUE
-                    search_context.IsEmpty = FALSE
-                    search_context.IsNotEmpty = TRUE
-                    search_context.Sheet = sheet
-                    search_context.Cell = sheet.getCellByPosition(col,row)
-                    search_context.Row = search_context.Cell.CellAddress.Row
-                    search_context.Col = search_context.Cell.CellAddress.Column
-                    search_context.Column = search_context.Cell.CellAddress.Column
-                    search_context.SheetName = sheet.Name
-                    search_context.SheetIndex = sheet.RangeAddress.Sheet
-                    search_context.ContextRow = row - usedrange.StartRow
-                    search_context.ContextCol = col - usedrange.StartColumn + 1
-                    search_context.ContextArea = search_area_index
-                    Exit Function
-                End If
+                    If search_result = TRUE Then
+                        search_context.Empty = FALSE
+                        search_context.NotEmpty = TRUE
+                        search_context.IsEmpty = FALSE
+                        search_context.IsNotEmpty = TRUE
+                        search_context.Sheet = sheet
+                        search_context.Cell = sheet.getCellByPosition(col,row)
+                        search_context.Row = search_context.Cell.CellAddress.Row
+                        search_context.Col = search_context.Cell.CellAddress.Column
+                        search_context.Column = search_context.Cell.CellAddress.Column
+                        search_context.SheetName = sheet.Name
+                        search_context.SheetIndex = sheet.RangeAddress.Sheet
+                        search_context.ContextRow = row - usedrange.StartRow
+                        search_context.ContextCol = col - usedrange.StartColumn + 1
+                        search_context.ContextArea = search_area_index
+                        Exit Function
+                    End If
                 Next word
             Next col
             search_context.ContextCol = 0
