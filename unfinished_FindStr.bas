@@ -81,7 +81,7 @@ Function FindStr(SearchSubject as Variant, Optional SearchAreas As Variant, Opti
             search_context.ContextOptions.SubstringSearch = FALSE
           Case "trim", "trimmed"
             search_context.ContextOptions.TrimmedSearch = TRUE
-          Case "prepare", "prepared"
+          Case "prep", "prepare", "prepared"
             search_context.ContextOptions.PreparedSearch = TRUE
           Case "notrim", "notrimmed", "nontrim", "nontrimmed"
             search_context.ContextOptions.TrimmedSearch = FALSE
