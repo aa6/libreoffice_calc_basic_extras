@@ -123,8 +123,8 @@ Function FindStr(SearchSubject as Variant, Optional SearchAreas As Variant, Opti
                 search_areas(UBound(search_areas)) = SearchAreas
             End If
         Else
-        Redim Preserve search_areas(UBound(search_areas) + 1) As Variant
-        search_areas(UBound(search_areas)) = ThisComponent.CurrentController.ActiveSheet
+            Redim Preserve search_areas(UBound(search_areas) + 1) As Variant
+            search_areas(UBound(search_areas)) = ThisComponent.CurrentController.ActiveSheet
         End If
         ' Normalizing raw search_areas. '
         For Each search_area In search_areas 
@@ -149,10 +149,10 @@ Function FindStr(SearchSubject as Variant, Optional SearchAreas As Variant, Opti
             End Select
         Next search_area
         search_context.ContextAreas = normalized_search_areas
-    If search_context.ContextOptions.PreparedSearch = TRUE Then
-        FindStr = search_context
-        Exit Function
-    End If
+        If search_context.ContextOptions.PreparedSearch = TRUE Then
+            FindStr = search_context
+            Exit Function
+        End If
     Else
         ' Implying that each object passed as SearchSubject would be a search context. '
         search_context = SearchSubject
