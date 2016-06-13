@@ -72,34 +72,34 @@ Function FindStr(SearchSubject as Variant, Optional SearchAreas As Variant, Opti
                 search_options(UBound(search_options)) = SearchOptions
             End If
         End If
-    For Each item In search_options
-        If TypeName(item) = "String" Then
-          Select Case LCase(Trim(item))
-              Case "exact"
-                  search_context.ContextOptions.TrimmedSearch = FALSE
-                  search_context.ContextOptions.SubstringSearch = FALSE
-              Case "trim", "trimmed"
-                  search_context.ContextOptions.TrimmedSearch = TRUE
-              Case "prep", "prepare", "prepared"
-                  search_context.ContextOptions.PreparedSearch = TRUE
-              Case "notrim", "notrimmed", "nontrim", "nontrimmed"
-                  search_context.ContextOptions.TrimmedSearch = FALSE
-              Case "substr", "substring", "substring-search"
-                  search_context.ContextOptions.SubstringSearch = TRUE
-              Case "nosubstr"
-                  search_context.ContextOptions.SubstringSearch = FALSE
-              Case "case-sensitive", "casesensitive"
-                  search_context.ContextOptions.CaseSensitive = TRUE
-              Case "case-insensitive", "caseinsensitive", "notcasesensitive"
-                  search_context.ContextOptions.CaseSensitive = FALSE
-              Case Else
-                  Err.Raise("UNSUPPORTED FINDSTR OPTION: " & LCase(Trim(item)))
-          End Select
-      Else
-          Err.Raise("FINDSTR OPTION MUST BE A STRING")
-      End If
-    Next item
-      ' Preparing search_words. '
+        For Each item In search_options
+            If TypeName(item) = "String" Then
+                Select Case LCase(Trim(item))
+                    Case "exact"
+                        search_context.ContextOptions.TrimmedSearch = FALSE
+                        search_context.ContextOptions.SubstringSearch = FALSE
+                    Case "trim", "trimmed"
+                        search_context.ContextOptions.TrimmedSearch = TRUE
+                    Case "prep", "prepare", "prepared"
+                        search_context.ContextOptions.PreparedSearch = TRUE
+                    Case "notrim", "notrimmed", "nontrim", "nontrimmed"
+                        search_context.ContextOptions.TrimmedSearch = FALSE
+                    Case "substr", "substring", "substring-search"
+                        search_context.ContextOptions.SubstringSearch = TRUE
+                    Case "nosubstr"
+                        search_context.ContextOptions.SubstringSearch = FALSE
+                    Case "case-sensitive", "casesensitive"
+                        search_context.ContextOptions.CaseSensitive = TRUE
+                    Case "case-insensitive", "caseinsensitive", "notcasesensitive"
+                        search_context.ContextOptions.CaseSensitive = FALSE
+                    Case Else
+                        Err.Raise("UNSUPPORTED FINDSTR OPTION: " & LCase(Trim(item)))
+                End Select
+            Else
+                Err.Raise("FINDSTR OPTION MUST BE A STRING")
+            End If
+        Next item
+        ' Preparing search_words. '
         If InStr(TypeName(SearchSubject),"(") > 0 Then
             search_words = SearchSubject
         Else
