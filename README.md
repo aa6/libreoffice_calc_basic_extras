@@ -6,7 +6,7 @@ As soon as all module names are local and identical function names in different 
 
 ## Common recommendations
 Coding without [XrayTool](http://berma.pagesperso-orange.fr/index2.html) is pain.  
-Never use `CInt` if you can use `CLng`. It will throw exceptions on large numbers.
+<ruby title="It expects your int to be actual int with N bytes length. And it will throw exception if your int would be larger than int maximum.">Never use `CInt` if you can use `CLng`.</ruby>
 
 ## Feedback
 Any help is appreciated. 
