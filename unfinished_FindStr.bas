@@ -17,9 +17,14 @@ Type SearchContextOfFindStrFunction
     Sheet As com.sun.star.sheet.XSpreadsheet
     Column As Long
     Empty As Boolean
+    Found As Boolean
+    HasResults As Boolean
     NotEmpty As Boolean
+    NotFound As Boolean
     IsEmpty As Boolean
+    IsFound As Boolean
     IsNotEmpty As Boolean
+    IsNotFound As Boolean
     SheetName As String
     SheetIndex As Long
     ' For internal usage: '
@@ -161,9 +166,15 @@ Function FindStr(SearchSubject as Variant, Optional SearchAreas As Variant, Opti
     ' Searching. '    
     FindStr = search_context
     search_context.Empty = TRUE
+    search_context.Found = FALSE
+    search_context.HasResults = FALSE
     search_context.IsEmpty = TRUE
+    search_context.IsFound = FALSE
     search_context.NotEmpty = FALSE
+    search_context.NotFound = TRUE
     search_context.IsNotEmpty = FALSE
+    search_context.IsNotFound = TRUE
+
     For search_area_index = search_context.ContextArea To UBound(search_context.ContextAreas) Step 1
         sheet = search_context.ContextAreas(search_area_index)(0)
         usedrange = search_context.ContextAreas(search_area_index)(1)
@@ -180,9 +191,14 @@ Function FindStr(SearchSubject as Variant, Optional SearchAreas As Variant, Opti
                     End If
                     If search_result = TRUE Then
                         search_context.Empty = FALSE
+                        search_context.Found = TRUE
+                        search_context.HasResults = TRUE
                         search_context.NotEmpty = TRUE
+                        search_context.NotFound = FALSE
                         search_context.IsEmpty = FALSE
+                        search_context.IsFound = TRUE
                         search_context.IsNotEmpty = TRUE
+                        search_context.IsNotFound = FALSE
                         search_context.Sheet = sheet
                         search_context.Cell = sheet.getCellByPosition(col,row)
                         search_context.Row = search_context.Cell.CellAddress.Row
