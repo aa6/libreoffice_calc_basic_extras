@@ -320,11 +320,11 @@ Function FindStr(SearchSubject as Variant, Optional SearchAreas As Variant, Opti
         ' Normalizing raw search_areas. '
         For Each search_area In search_areas 
             Select Case TRUE
-              Case FindStr_Object_Is_RangeAddress(search_area)
-                'Xray ThisComponent
-                sheet = ThisComponent.Sheets.getByIndex(search_area.Sheet)
-                Redim Preserve normalized_search_areas(UBound(normalized_search_areas) + 1) As Variant
-                normalized_search_areas(UBound(normalized_search_areas)) = Array(sheet,search_area)
+                Case FindStr_Object_Is_RangeAddress(search_area)
+                    'Xray ThisComponent
+                    sheet = ThisComponent.Sheets.getByIndex(search_area.Sheet)
+                    Redim Preserve normalized_search_areas(UBound(normalized_search_areas) + 1) As Variant
+                    normalized_search_areas(UBound(normalized_search_areas)) = Array(sheet,search_area)
                 Case search_area.SupportsService("com.sun.star.sheet.Spreadsheet")
                     item = search_area.CreateCursor()
                     item.gotoStartOfUsedArea(FALSE) ' FALSE sets cursor size to a 1x1 cell. '
