@@ -1,4 +1,177 @@
-Option Explicit
+'--------------------------------------------------------------------------------------------------'
+' FindStr                                                                                          '
+'--------------------------------------------------------------------------------------------------'
+' Searches cells by string contents.                                                               '
+'                                                                                                  '
+' Parameters:                                                                                      '
+'                                                                                                  '
+'   SearchSubject As Variant                                                                       '
+'     String or array of strings to search for.                                                    '
+'                                                                                                  '
+'   Optional SearchAreas As Variant <Default = ThisComponent.CurrentController.ActiveSheet>        '
+'     Place or array of places to search.                                                          '
+'                                                                                                  '
+'     Possible types:                                                                              '
+'       com.sun.star.sheet.Spreadsheet                                                             '
+'       com.sun.star.sheet.SpreadsheetDocument                                                     '
+'                                                                                                  '
+'   Optional SearchOptions As Variant                                                              '
+'     String with option name or an array of option name strings.                                  '
+'                                                                                                  '
+'     Default options (options that are on by default):                                            '
+'       "case-insensitive", "non-substring", "notrim", "non-prepared"                              '
+'                                                                                                  '
+'     Possible options:                                                                            '
+'       "trim", "trimmed"                                                                          '
+'         Enable trimming of SearchSubject and cell values when search.                            '
+'       "notrim", "notrimmed", "non-trim", "non-trimmed"                                           '
+'         Disable trimming.                                                                        '
+'       "substr", "substring", "substring-search"                                                  '
+'         Enable matches of SearchSubject as a substring of cell values.                           '
+'       "nosubstr", "non-substring", "non-substring-search"                                        '
+'         Disable substring search.                                                                '
+'       "case-insensitive", "caseinsensitive", "notcasesensitive"                                  '
+'         Enable case insensitive seach.                                                           '
+'       "case-sensitive", "casesensitive"                                                          '
+'         Disable case insensitive search.                                                         '
+'       "exact"                                                                                    '
+'         Non-trimmed case-sensitive and non-substring search.                                     '
+'       "prep", "prepare", "prepared"                                                              '
+'         Prepared search. First call of FindStr will not search for values and would just return  '
+'         search context for further search. It is useful for wrapping search code in a cycle.     '
+'       "noprep", "noprepare", "non-prepared"                                                      '
+'         Disables prepared search. First call of FindStr will search for values and would return  '
+'         a search context including information about first search match.                         '
+'                                                                                                  '
+' Examples:                                                                                        '
+'--------------------------------------------------------------------------------------------------'
+'                                                                                                  '
+'     price_cell = FindStr("Price title")                                                          '
+'                                                                                                  '
+' Expected results:                                                                                '
+'                                                                                                  '
+'   +===+===================+===+===+===+===+                                                      '
+'   |   |         A         | B | C | D | E |                                                      '
+'   +===+===================+===+===+===+===+                                                      '
+'   | 1 |                           |   |   |                                                      '
+'   +---+                           +---+---+                                                      '
+'   | 2 |     Merged cell value     |   |   |                                                      '
+'   +---+                           +---+---+                                                      '
+'   | 3 |                           |   |   |                                                      '
+'   +---+-------------------+---+---+---+---+                                                      '
+'   | 4 |                   |   |   |   |   |                                                      '
+'   +---+-------------------+---+---+---+---+                                                      '
+'                                                                                                  '
+'   +===+===================+===================+===================+===+===+                      '
+'   |   |         A         |         B         |         C         | D | E |                      '
+'   +===+===================+===================+===================+===+===+                      '
+'   | 1 | Merged cell value | Merged cell value | Merged cell value |   |   |                      '
+'   +---+-------------------+-------------------+-------------------+---+---+                      '
+'   | 2 | Merged cell value | Merged cell value | Merged cell value |   |   |                      '
+'   +---+-------------------+-------------------+-------------------+---+---+                      '
+'   | 3 | Merged cell value | Merged cell value | Merged cell value |   |   |                      '
+'   +---+-------------------+-------------------+-------------------+---+---+                      '
+'   | 4 |                   |                   |                   |   |   |                      '
+'   +---+-------------------+-------------------+-------------------+---+---+                      '
+'                                                                                                  '
+'--------------------------------------------------------------------------------------------------'
+'                                                                                                  '
+'     UnMergeAndNormalizeCell("A1",FALSE)                                                          '
+'                                                                                                  '
+' Expected results:                                                                                '
+'                                                                                                  '
+'   +===+===================+===+===+===+===+                                                      '
+'   |   |         A         | B | C | D | E |                                                      '
+'   +===+===================+===+===+===+===+                                                      '
+'   | 1 |                           |   |   |                                                      '
+'   +---+                           +---+---+                                                      '
+'   | 2 |     Merged cell value     |   |   |                                                      '
+'   +---+                           +---+---+                                                      '
+'   | 3 |                           |   |   |                                                      '
+'   +---+-------------------+---+---+---+---+                                                      '
+'   | 4 |                   |   |   |   |   |                                                      '
+'   +---+-------------------+---+---+---+---+                                                      '
+'                                                                                                  '
+'   +===+===================+===+===+===+===+                                                      '
+'   |   |         A         | B | C | D | E |                                                      '
+'   +===+===================+===+===+===+===+                                                      '
+'   | 1 | Merged cell value |   |   |   |   |                                                      '
+'   +---+-------------------+---+---+---+---+                                                      '
+'   | 2 | Merged cell value |   |   |   |   |                                                      '
+'   +---+-------------------+---+---+---+---+                                                      '
+'   | 3 | Merged cell value |   |   |   |   |                                                      '
+'   +---+-------------------+---+---+---+---+                                                      '
+'   | 4 |                   |   |   |   |   |                                                      '
+'   +---+-------------------+---+---+---+---+                                                      '
+'                                                                                                  '
+'--------------------------------------------------------------------------------------------------'
+'                                                                                                  '
+'     UnMergeAndNormalizeCell("A1",TRUE,FALSE)                                                     '
+'                                                                                                  '
+' Expected results:                                                                                '
+'                                                                                                  '
+'   +===+===================+===+===+===+===+                                                      '
+'   |   |         A         | B | C | D | E |                                                      '
+'   +===+===================+===+===+===+===+                                                      '
+'   | 1 |                           |   |   |                                                      '
+'   +---+                           +---+---+                                                      '
+'   | 2 |     Merged cell value     |   |   |                                                      '
+'   +---+                           +---+---+                                                      '
+'   | 3 |                           |   |   |                                                      '
+'   +---+-------------------+---+---+---+---+                                                      '
+'   | 4 |                   |   |   |   |   |                                                      '
+'   +---+-------------------+---+---+---+---+                                                      '
+'                                                                                                  '
+'   +===+===================+===================+===================+===+===+                      '
+'   |   |         A         |         B         |         C         | D | E |                      '
+'   +===+===================+===================+===================+===+===+                      '
+'   | 1 | Merged cell value | Merged cell value | Merged cell value |   |   |                      '
+'   +---+-------------------+-------------------+-------------------+---+---+                      '
+'   | 2 |                   |                   |                   |   |   |                      '
+'   +---+-------------------+-------------------+-------------------+---+---+                      '
+'   | 3 |                   |                   |                   |   |   |                      '
+'   +---+-------------------+-------------------+-------------------+---+---+                      '
+'   | 4 |                   |                   |                   |   |   |                      '
+'   +---+-------------------+-------------------+-------------------+---+---+                      '
+'                                                                                                  '
+'--------------------------------------------------------------------------------------------------'
+'                                                                                                  '
+'     UnMergeAndNormalizeCell("A1",FALSE,FALSE)                                                    '
+'                                                                                                  '
+' Expected results:                                                                                '
+'                                                                                                  '
+'   +===+===================+===+===+===+===+                                                      '
+'   |   |         A         | B | C | D | E |                                                      '
+'   +===+===================+===+===+===+===+                                                      '
+'   | 1 |                           |   |   |                                                      '
+'   +---+                           +---+---+                                                      '
+'   | 2 |     Merged cell value     |   |   |                                                      '
+'   +---+                           +---+---+                                                      '
+'   | 3 |                           |   |   |                                                      '
+'   +---+-------------------+---+---+---+---+                                                      '
+'   | 4 |                   |   |   |   |   |                                                      '
+'   +---+-------------------+---+---+---+---+                                                      '
+'                                                                                                  '
+'   +===+===================+===+===+===+===+                                                      '
+'   |   |         A         | B | C | D | E |                                                      '
+'   +===+===================+===+===+===+===+                                                      '
+'   | 1 | Merged cell value |   |   |   |   |                                                      '
+'   +---+-------------------+---+---+---+---+                                                      '
+'   | 2 |                   |   |   |   |   |                                                      '
+'   +---+-------------------+---+---+---+---+                                                      '
+'   | 3 |                   |   |   |   |   |                                                      '
+'   +---+-------------------+---+---+---+---+                                                      '
+'   | 4 |                   |   |   |   |   |                                                      '
+'   +---+-------------------+---+---+---+---+                                                      '
+'                                                                                                  '
+'--------------------------------------------------------------------------------------------------'
+' See also:                                                                                        '
+'   ASCII tables generator.                                                                        '
+'     https://ozh.github.io/ascii-tables/                                                          '
+'--------------------------------------------------------------------------------------------------'
+' Feedback & Issues:                                                                               '
+'   https://github.com/aa6/libreoffice_calc_basic_extras/issues                                    '
+'--------------------------------------------------------------------------------------------------'
 ' Options: Array("Case-Insensitive","Regex","etc.")
 ' article_col = FindStr("test", Array(searcharea,"case-insensitive","trimmed"))
 Type SearchContextOptionsOfFindStrFunction
@@ -19,6 +192,7 @@ Type SearchContextOfFindStrFunction
     Empty As Boolean
     Found As Boolean
     HasResults As Boolean
+    HasNoResults As Boolean
     NotEmpty As Boolean
     NotFound As Boolean
     IsEmpty As Boolean
@@ -36,6 +210,18 @@ Type SearchContextOfFindStrFunction
     ContextOptions As SearchContextOptionsOfFindStrFunction
   
 End Type
+Function FindStr_Object_Is_RangeAddress(TestObject as Variant)
+    On Local Error Goto Label_FindStr_Object_Is_Not_RangeAddress
+    test = TestObject.Sheet
+    test = TestObject.StartRow
+    test = TestObject.StartColumn
+    test = TestObject.EndRow
+    test = TestObject.EndColumn
+    FindStr_Object_Is_RangeAddress = TRUE
+    Exit Function
+    Label_FindStr_Object_Is_Not_RangeAddress:
+    FindStr_Object_Is_RangeAddress = FALSE
+End Function
 Function FindStr(SearchSubject as Variant, Optional SearchAreas As Variant, Optional SearchOptions As Variant) As Object
     
     Dim col As Long
@@ -134,6 +320,11 @@ Function FindStr(SearchSubject as Variant, Optional SearchAreas As Variant, Opti
         ' Normalizing raw search_areas. '
         For Each search_area In search_areas 
             Select Case TRUE
+              Case FindStr_Object_Is_RangeAddress(search_area)
+                'Xray ThisComponent
+                sheet = ThisComponent.Sheets.getByIndex(search_area.Sheet)
+                Redim Preserve normalized_search_areas(UBound(normalized_search_areas) + 1) As Variant
+                normalized_search_areas(UBound(normalized_search_areas)) = Array(sheet,search_area)
                 Case search_area.SupportsService("com.sun.star.sheet.Spreadsheet")
                     item = search_area.CreateCursor()
                     item.gotoStartOfUsedArea(FALSE) ' FALSE sets cursor size to a 1x1 cell. '
@@ -168,6 +359,7 @@ Function FindStr(SearchSubject as Variant, Optional SearchAreas As Variant, Opti
     search_context.Empty = TRUE
     search_context.Found = FALSE
     search_context.HasResults = FALSE
+    search_context.HasNoResults = TRUE
     search_context.IsEmpty = TRUE
     search_context.IsFound = FALSE
     search_context.NotEmpty = FALSE
@@ -193,6 +385,7 @@ Function FindStr(SearchSubject as Variant, Optional SearchAreas As Variant, Opti
                         search_context.Empty = FALSE
                         search_context.Found = TRUE
                         search_context.HasResults = TRUE
+                        search_context.HasNoResults = FALSE
                         search_context.NotEmpty = TRUE
                         search_context.NotFound = FALSE
                         search_context.IsEmpty = FALSE
