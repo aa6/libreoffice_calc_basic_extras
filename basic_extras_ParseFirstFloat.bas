@@ -69,7 +69,7 @@ Function ParseFirstFloat(Str As String, Optional CheckNegatives As Boolean) As S
         If Instr("0123456789", poschar) <> 0 Then
             ParseFirstFloat = ParseFirstFloat & poschar
         Else
-            If NOT (Instr(" ", poschar) <> 0) AND NOT (Len(ParseFirstFloat) = 0) Then
+            If NOT (Instr(Chr(32) + Chr(160), poschar) <> 0) AND NOT (Len(ParseFirstFloat) = 0) Then
                 GoTo ParseFirstFloatExitPos
             End If
         End If
