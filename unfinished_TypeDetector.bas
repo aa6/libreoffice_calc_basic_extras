@@ -1,29 +1,27 @@
 Function DuplicateRow_ObjectType(TestObject as Variant, Optional TestCase As String)
-  If TypeName(TestObject) <> "Object" Then
-    DuplicateRow_ObjectType = TypeName(TestObject)
-    Exit Function
-  End If
-  If IsMissing(TestCase) Then
-    TestCase = "ImpossibleObject"
-  End If
-  Select Case TestCase
-    Case "ImpossibleObject"
-      On Local Error Goto Label_DuplicateRow_ObjectTest_StrangeShit
-      error_trigger = TestObject.Row1
-      DuplicateRow_ObjectType = TestCase
-      Exit Function
-      Label_DuplicateRow_ObjectTest_StrangeShit:
-      DuplicateRow_ObjectType =  DuplicateRow_ObjectType(TestObject,"Cell")
-    Case "Cell"
-      On Local Error Goto Label_DuplicateRow_ObjectTest_1
-      error_trigger = TestObject.CellAddress.Row
-      error_trigger = TestObject.CellAddress.Column
-      DuplicateRow_ObjectType = TestCase
-      Exit Function
-      Label_DuplicateRow_ObjectTest_1:
-      DuplicateRow_ObjectType =  DuplicateRow_ObjectType(TestObject,"Unknown")
-    Case Else
-      DuplicateRow_ObjectType = TestCase
-  End Select
-
+    test_object = TestObject
+    Select Case TRUE
+      Case IsMissing(TestCase)
+          If TypeName(test_object) <> "Object" Then
+              DuplicateRow_ObjectType = TypeName(test_object)
+          Else
+              DuplicateRow_ObjectType = DuplicateRow_ObjectType(TestObject,"ImpossibleObject")
+          End If      
+      Case TestCase = "ImpossibleObject"
+          On Local Error Goto LABELDUPLICATEROWOBJECTTESTFAIL0
+          error_trigger = test_object.Row1
+          Goto LABELDUPLICATEROWOBJECTTESTSUCCESS
+          LABELDUPLICATEROWOBJECTTESTFAIL0:
+          DuplicateRow_ObjectType =  DuplicateRow_ObjectType(TestObject,"Cell")
+      Case TestCase = "Cell"
+          On Local Error Goto LABELDUPLICATEROWOBJECTTESTFAIL1
+          error_trigger = test_object.CellAddress.Row
+          error_trigger = test_object.CellAddress.Column
+          Goto LABELDUPLICATEROWOBJECTTESTSUCCESS
+          LABELDUPLICATEROWOBJECTTESTFAIL1:
+          DuplicateRow_ObjectType =  DuplicateRow_ObjectType(TestObject,"Unknown")
+      Case Else
+          LABELDUPLICATEROWOBJECTTESTSUCCESS:
+          DuplicateRow_ObjectType = TestCase
+    End Select
 End Function
