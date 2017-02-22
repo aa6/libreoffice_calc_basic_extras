@@ -42,6 +42,7 @@
 '       "noprep", "noprepare", "non-prepared"                                                      '
 '         Disables prepared search. First call of FindStr will search for values and would return  '
 '         a search context including information about first search match.                         '
+'       "reverse", "reversed", "reverse-search", "reversed-search"                                 '
 '                                                                                                  '
 ' Examples:                                                                                        '
 '--------------------------------------------------------------------------------------------------'
@@ -132,6 +133,36 @@
 '                                                                                                  '
 '--------------------------------------------------------------------------------------------------'
 '                                                                                                  '
+'     search_words = Array("Title 1","Title 3","Title 7")                                          '
+'     sheet1 = ThisComponent.Sheets.getByName("Sheet1")                                            '
+'     sheet2 = ThisComponent.Sheets.getByName("Sheet2")                                            '
+'     srch = FindStr(search_words, Array(sheet1,sheet2) , Array("prepared","reverse"))             '
+'     While FindStr(srch).HasResults                                                               '
+'       MsgBox "Row: " + srch.Row + " Col: " + srch.Col + " Value: " + srch.Cell.getString()       '
+'     Wend                                                                                         '
+'                                                                                                  '
+' Expected results:                                                                                '
+'                                                                                                  '
+'   +===+=========+=========+=========+=========+   +===+=========+=========+=========+=========+  '
+'   |   |    A    |    B    |    C    |    D    |   |   |    A    |    B    |    C    |    D    |  '
+'   +===+=========+=========+=========+=========+   +===+=========+=========+=========+=========+  '
+'   | 1 | Title 1 | Title 2 | Title 3 | Title 4 |   | 1 | Title 5 | Title 6 | Title 7 | Title 8 |  '
+'   +---+---------+---------+---------+---------+   +---+---------+---------+---------+---------+  '
+'   | 2 | Val 111 | Val 121 | Val 131 | Val 141 |   | 2 | Val 251 | Val 261 | Val 271 | Val 281 |  '
+'   +---+---------+---------+---------+---------+   +---+---------+---------+---------+---------+  '
+'   | 3 | Val 112 | Val 122 | Val 132 | Val 142 |   | 3 | Val 252 | Val 262 | Val 272 | Val 282 |  '
+'   +---+---------+---------+---------+---------+   +---+---------+---------+---------+---------+  '
+'   | Sheet1 |                                      | Sheet2 |                                     '
+'   +========+                                      +========+                                     '
+'                                                                                                  '
+' Output:                                                                                          '
+'                                                                                                  '
+'   Row: 0 Col: 2 Value: Title 7                                                                   '
+'   Row: 0 Col: 2 Value: Title 3                                                                   '
+'   Row: 0 Col: 0 Value: Title 1                                                                   '
+'                                                                                                  '
+'--------------------------------------------------------------------------------------------------'
+'                                                                                                  '
 '     srch = FindStr("Title 7", ThisComponent)                                                     '
 '     If srch.Found Then                                                                           '
 '       MsgBox "Row: " + srch.Row + " Col: " + srch.Col + " Value: " + srch.Cell.getString()       '
@@ -170,6 +201,7 @@ Type SearchContextOptionsOfFindStrFunction
     CaseSensitive As Boolean
     TrimmedSearch As Boolean
     PreparedSearch As Boolean
+    ReversedSearch As Boolean
     SubstringSearch As Boolean
   
 End Type
@@ -237,13 +269,11 @@ Function FindStr(SearchSubject as Variant, Optional SearchAreas As Variant, Opti
     If TypeName(SearchSubject) <> "Object" Then
         ' Initializing new search context. '
         search_context = New SearchContextOfFindStrFunction
-        search_context.ContextRow = 0
-        search_context.ContextCol = 0
-        search_context.ContextArea = 0
         search_context.ContextOptions = New SearchContextOptionsOfFindStrFunction
         ' Preparing SearchOptions. '
         search_context.ContextOptions.CaseSensitive = FALSE
         search_context.ContextOptions.TrimmedSearch = FALSE
+        search_context.ContextOptions.ReversedSearch = FALSE
         search_context.ContextOptions.PreparedSearch = FALSE
         search_context.ContextOptions.SubstringSearch = FALSE
         If NOT IsMissing(SearchOptions) Then
@@ -274,6 +304,8 @@ Function FindStr(SearchSubject as Variant, Optional SearchAreas As Variant, Opti
                         search_context.ContextOptions.CaseSensitive = TRUE
                     Case "case-insensitive", "caseinsensitive", "notcasesensitive"
                         search_context.ContextOptions.CaseSensitive = FALSE
+                    Case "reverse", "reversed", "reverse-search", "reversed-search"
+                        search_context.ContextOptions.ReversedSearch = TRUE
                     Case Else
                         Err.Raise("UNSUPPORTED FINDSTR OPTION: " & LCase(Trim(item)))
                 End Select
@@ -336,6 +368,16 @@ Function FindStr(SearchSubject as Variant, Optional SearchAreas As Variant, Opti
             End Select
         Next search_area
         search_context.ContextAreas = normalized_search_areas
+        ' Finishing context initialization. '
+        If search_context.ContextOptions.ReversedSearch = TRUE Then
+            search_context.ContextArea = UBound(search_context.ContextAreas)
+            search_context.ContextRow = -2
+            search_context.ContextCol = -2
+        Else
+            search_context.ContextRow = 0
+            search_context.ContextCol = 0
+            search_context.ContextArea = 0
+        End If
         If search_context.ContextOptions.PreparedSearch = TRUE Then
             FindStr = search_context
             Exit Function
@@ -358,11 +400,32 @@ Function FindStr(SearchSubject as Variant, Optional SearchAreas As Variant, Opti
     search_context.IsNotEmpty = FALSE
     search_context.IsNotFound = TRUE
 
-    For search_area_index = search_context.ContextArea To UBound(search_context.ContextAreas) Step 1
+    If search_context.ContextOptions.ReversedSearch = TRUE Then
+        search_area_step = -1
+        search_area_index_target = 0
+    Else
+        search_area_step = 1
+        search_area_index_target = UBound(search_context.ContextAreas)
+    End If
+
+    For search_area_index = search_context.ContextArea To search_area_index_target Step search_area_step
         sheet = search_context.ContextAreas(search_area_index)(0)
         usedrange = search_context.ContextAreas(search_area_index)(1)
-        For row = usedrange.StartRow + search_context.ContextRow To usedrange.EndRow
-            For col = usedrange.StartColumn + search_context.ContextCol To usedrange.EndColumn
+        If search_context.ContextOptions.ReversedSearch = TRUE Then
+            search_area_row_target = usedrange.StartRow
+            search_area_col_target = usedrange.StartColumn
+        Else
+            search_area_row_target = usedrange.EndRow
+            search_area_col_target = usedrange.EndColumn
+        End If 
+        If search_context.ContextRow = -2 Then
+            search_context.ContextRow = usedrange.EndRow - usedrange.StartRow
+        End if
+        For row = usedrange.StartRow + search_context.ContextRow To search_area_row_target Step search_area_step
+            If search_context.ContextCol = -2 Then
+                search_context.ContextCol = usedrange.EndColumn - usedrange.StartColumn
+            End if
+            For col = usedrange.StartColumn + search_context.ContextCol To search_area_col_target Step search_area_step
                 cellvalue = sheet.getCellByPosition(col,row).getString()
                 cellvalue = IIf(search_context.ContextOptions.TrimmedSearch, Trim(cellvalue), cellvalue)
                 cellvalue = IIf(search_context.ContextOptions.CaseSensitive, cellvalue, LCase(cellvalue))
@@ -391,15 +454,15 @@ Function FindStr(SearchSubject as Variant, Optional SearchAreas As Variant, Opti
                         search_context.SheetName = sheet.Name
                         search_context.SheetIndex = sheet.RangeAddress.Sheet
                         search_context.ContextRow = row - usedrange.StartRow
-                        search_context.ContextCol = col - usedrange.StartColumn + 1
+                        search_context.ContextCol = col - usedrange.StartColumn + search_area_step
                         search_context.ContextArea = search_area_index
                         Exit Function
                     End If
                 Next word
             Next col
-            search_context.ContextCol = 0
+            search_context.ContextCol = IIF(search_context.ContextOptions.ReversedSearch, -2, 0)
         Next row
-        search_context.ContextRow = 0
+        search_context.ContextRow = IIF(search_context.ContextOptions.ReversedSearch, -2, 0)
     Next search_area_index
     ' Search finished
     Erase search_context.Sheet
