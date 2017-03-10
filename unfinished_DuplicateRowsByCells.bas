@@ -7,6 +7,7 @@
 '                                                                                                  '
 '   Arr As Variant                                                                                 '
 '     The input array.                                                                             '
+' RowCells as Variant, ResultRowsCount as Integer, Optional ActiveSheetForIntegerRowCells as Variant '
 '                                                                                                  '
 ' Examples:                                                                                        '
 '--------------------------------------------------------------------------------------------------'
