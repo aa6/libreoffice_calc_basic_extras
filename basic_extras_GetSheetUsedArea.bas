@@ -45,10 +45,10 @@ Function GetSheetUsedArea(Optional TargetSheet As Variant) As Object
     Select Case TRUE
         Case IsMissing(TargetSheet)
             sheet = ThisComponent.CurrentController.ActiveSheet
-        Case TypeName(TargetSheet) = "Number"
-            sheet = ThisComponent.Sheets.getByIndex(TargetSheet)
         Case TypeName(TargetSheet) = "String"
             sheet = ThisComponent.Sheets.getByName(TargetSheet)
+        Case TypeName(TargetSheet) = "Number"
+            sheet = ThisComponent.Sheets.getByIndex(TargetSheet)
         Case Else
             sheet = TargetSheet
     End Select
