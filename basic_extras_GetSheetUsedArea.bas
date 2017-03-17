@@ -6,7 +6,50 @@
 ' Parameters:                                                                                      '
 '                                                                                                  '
 '   Optional TargetSheet As Object <Default = ThisComponent.CurrentController.ActiveSheet>         '
-'     Reference to a sheet (com.sun.star.sheet.XSpreadsheet).                                      '
+'       Reference to a sheet (com.sun.star.sheet.XSpreadsheet).                                    '
+'                                                                                                  '
+' Return value:                                                                                    '
+'                                                                                                  '
+'   GetSheetUsedAreaResultObject                                                                   '
+'                                                                                                  '
+'       .Sheet As com.sun.star.sheet.XSpreadsheet                                                  '
+'           Target sheet.                                                                          '
+'                                                                                                  '
+'       .SheetIndex As Integer                                                                     '
+'       .SheetNumber As Integer                                                                    '
+'           Target sheet index.                                                                    '
+'                                                                                                  '
+'       .StartRow As Long                                                                          '
+'           Used area start row index.                                                             '
+'                                                                                                  '
+'       .StartCol As Long                                                                          '
+'       .StartColumn As Long                                                                       '
+'           Used area start column index.                                                          '
+'                                                                                                  '
+'       .EndRow As Long                                                                            '
+'           Used area end row index.                                                               '
+'                                                                                                  '
+'       .EndCol As Long                                                                            '
+'       .EndColumn As Long                                                                         '
+'           Used area end column index.                                                            '
+'                                                                                                  '
+'       .RangeAddress As com.sun.star.table.CellRangeAddress                                       '
+'       .CellRangeAddress As com.sun.star.table.CellRangeAddress                                   '
+'                                                                                                  '
+'           .Sheet As Integer                                                                      '
+'               Target sheet index.                                                                '
+'                                                                                                  '
+'           .StartColumn As Long                                                                   '
+'               Used area start column index.                                                      '
+'                                                                                                  '
+'           .StartRow As Long                                                                      '
+'               Used area start row index.                                                         '
+'                                                                                                  '
+'           .EndColumn As Long                                                                     '
+'               Used area end column index.                                                        '
+'                                                                                                  '
+'           .EndRow As Long                                                                        '
+'               Used area end row index.                                                           '
 '                                                                                                  '
 ' Examples:                                                                                        '
 '--------------------------------------------------------------------------------------------------'
@@ -19,14 +62,6 @@
 ' or                                                                                               '
 '     used_area = GetSheetUsedArea(ThisComponent.Sheets.getByIndex(0))                             '
 '                                                                                                  '
-' Expected values:                                                                                 '
-'   used_area:                                                                                     '
-'     com.sun.star.table.CellRangeAddress                                                          '
-'       .Sheet       integer Sheet index                                                           '
-'       .StartColumn long    Start column index                                                    '
-'       .StartRow    long    Start row index                                                       '
-'       .EndColumn   long    End column index                                                      '
-'       .EndRow      long    End row index                                                         '
 '--------------------------------------------------------------------------------------------------'
 ' See also:                                                                                        '
 '   https://wiki.documentfoundation.org/Macros/Calc/001/fr                                         '
@@ -37,7 +72,22 @@
 ' Feedback & Issues:                                                                               '
 '   https://github.com/aa6/libreoffice_calc_basic_extras/issues                                    '
 '--------------------------------------------------------------------------------------------------'
-Function GetSheetUsedArea(Optional TargetSheet As Variant) As Object
+Type GetSheetUsedAreaResultObject
+
+    Sheet As Object
+    SheetIndex As Integer
+    SheetNumber As Integer
+    StartRow As Long
+    StartCol As Long
+    StartColumn As Long
+    EndRow As Long
+    EndCol As Long
+    EndColumn As Long
+    RangeAddress As com.sun.star.table.CellRangeAddress
+    CellRangeAddress As com.sun.star.table.CellRangeAddress
+  
+End Type
+Function GetSheetUsedArea(Optional TargetSheet As Variant) As GetSheetUsedAreaResultObject
     
     Dim sheet As Object
     Dim cursor As Object
@@ -56,6 +106,17 @@ Function GetSheetUsedArea(Optional TargetSheet As Variant) As Object
     cursor = sheet.CreateCursor()
     cursor.gotoStartOfUsedArea(FALSE) ' FALSE sets cursor size to a 1x1 cell. '
     cursor.gotoEndOfUsedArea(TRUE)    ' TRUE expands cursor range.            '
-    GetSheetUsedArea = cursor.getRangeAddress()
-    
+    GetSheetUsedArea = New GetSheetUsedAreaResultObject
+    GetSheetUsedArea.RangeAddress = cursor.getRangeAddress()
+    GetSheetUsedArea.CellRangeAddress = GetSheetUsedArea.RangeAddress
+    GetSheetUsedArea.Sheet = sheet
+    GetSheetUsedArea.SheetIndex = GetSheetUsedArea.CellRangeAddress.Sheet
+    GetSheetUsedArea.SheetNumber = GetSheetUsedArea.SheetIndex
+    GetSheetUsedArea.StartRow = GetSheetUsedArea.CellRangeAddress.StartRow
+    GetSheetUsedArea.StartCol = GetSheetUsedArea.CellRangeAddress.StartColumn
+    GetSheetUsedArea.StartColumn = GetSheetUsedArea.CellRangeAddress.StartColumn
+    GetSheetUsedArea.EndRow = GetSheetUsedArea.CellRangeAddress.EndRow
+    GetSheetUsedArea.EndCol = GetSheetUsedArea.CellRangeAddress.EndColumn
+    GetSheetUsedArea.EndColumn = GetSheetUsedArea.CellRangeAddress.EndColumn
+   
 End Function
