@@ -343,6 +343,15 @@ Function FindStr(SearchSubject as Variant, Optional SearchAreas As Variant, Opti
         ' Normalizing raw search_areas. '
         For Each search_area In search_areas 
             Select Case TRUE
+                Case InStr(TypeName(search_area),"(") > 0
+                    If NOT search_area(0).SupportsService("com.sun.star.sheet.Spreadsheet") Then
+                        Err.Raise("search_area(0) must be a com.sun.star.sheet.Spreadsheet")
+                    End If
+                    If NOT FindStr_Object_Is_RangeAddress(search_area(1)) Then
+                        Err.Raise("search_area(1) must be a RangeAddress")
+                    End If
+                    Redim Preserve normalized_search_areas(UBound(normalized_search_areas) + 1) As Variant
+                    normalized_search_areas(UBound(normalized_search_areas)) = search_area
                 Case FindStr_Object_Is_RangeAddress(search_area)
                     'Xray ThisComponent
                     sheet = ThisComponent.Sheets.getByIndex(search_area.Sheet)
